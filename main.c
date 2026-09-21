@@ -93,11 +93,11 @@ int main(void)
             double regularInstallment;
             double extraCreditCost;
             double remainingBalance;
-
+            
             switch (approved) {
             case 0:
                 printf("No approved credit exists.\n");
-                printf("Complete the credit application first. \n");
+                printf("Complete the credit application first.\n\n\n");
                 break;
             case 1:
                 printf("Approved Credit found.\n");
@@ -127,31 +127,86 @@ int main(void)
                             printf("ERROR: Calculation error.");
                             break;
                         case 1:
-                            regularInstallment = totalRepayment / term;
-                            printf("Operation is successful, repayment information ready; directing to Repayment Menu.");
+                            printf("Operation is successful, repayment information ready; directing to Repayment Menu.\n");
+                            int repaymentChoice;
                             
-                            /*
-                            REPAYMENT CONTROL MENU
-                            WILL START HERE
-                            */
+                                printf("\n\n");
+                                printf("*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n");
+                                printf("|                REPAYMENT CONTROL CENTER             |\n");
+                                printf("*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n");
+                                printf(" Credit Status : APPROVED\n");
+                                printf(" Furniture     : %.2f EUR\n", price);
+                                printf(" Term          : %d months\n", term);
+                                printf(" Interest Rate : %.0f%%\n", rate);
+                                printf("*---*---*---*---*---*---*---*---*---*---*---*---*---*--*\n");
+                                printf(" Monthly payment : %10.2f EUR\n", regularInstallment);
+                                printf(" Total repayment : %10.2f EUR\n", totalRepayment);
+                                printf(" Total interest  : %10.2f EUR\n", interestAmount);
+                                printf("*---*---*---*---*---*---*---*---*---*---*---*---*---*--*\n\n");
+                                printf("  [1] View repayment summary\n");
+                                printf("  [2] Generate full repayment schedule\n");
+                                printf("  [3] Inspect a specific installment\n");
+                                printf("  [4] View credit cost analysis\n");
+                                printf("  [5] Find final payment date\n");
+                                printf("  [6] Simulate repayment progress\n");
+                                printf("  [7] Re-display credit conditions\n");
+                                printf("  [0] Return to main menu\n\n");
+                                printf("*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n");
+                             do {
+                                 printf("Select an option: ");
+
+                                if (scanf("%d", &repaymentChoice) != 1){
+                                    printf("Invalid input. Enter a number from the menu...\n\n");
+
+                                    while (getchar() != '\n');
+                                    repaymentChoice = -1;
+                                    continue;
+                                }
+
+                                switch (repaymentChoice) {
+                                case 1:
+                                    printf("Repayment summary.\n\n");
+                                    break;
+                                case 2:
+                                    printf("Generate full repayment schedule\n\n");
+                                    break;
+                                case 3:
+                                    printf("Inspect a specific installment\n\n");
+                                    break;
+                                case 4:
+                                    printf("View credit cost analysis\n\n");
+                                    break;
+                                case 5:
+                                    printf("Find final payment date\n\n");
+                                    break;
+                                case 6:
+                                    printf("Simulate repayment progress\n\n");
+                                    break;
+                                case 7:
+                                    printf("Re-display credit conditions\n\n");
+                                    break;
+
+                                case 0:
+                                    printf("Returning to main menu...\n\n");
+                                    break;
+
+                                default:
+                                    printf("Invalid option. Please choose a number from the menu.\n\n");
+                                    break;
+                                    
+                                }
+                            
+                              } while (repaymentChoice != 0);
+
+
 
                             break;
                         }
-
 
                         break;
                     }
                 }
             }
-            // -------------------------------------------
-            printf("\n\n--- DEBUG REPAYMENT VALUES ---\n");
-            printf("Rate: %.2f%%\n", rate);
-            printf("Interest amount: %.2f EUR\n", interestAmount);
-            printf("Total repayment: %.2f EUR\n", totalRepayment);
-            printf("Regular installment: %.2f EUR\n", regularInstallment);
-            printf("Extra credit cost: %.2f EUR\n", extraCreditCost);
-            printf("Remaining balance: %.2f EUR\n", remainingBalance);
-            printf("---------------------------------\n\n");
 
             break;
         }
