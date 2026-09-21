@@ -1,4 +1,4 @@
-
+#define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
 
 int main(void)
@@ -78,9 +78,11 @@ int main(void)
         }
         break;
 
-        case 2:
-            printf("Not implemented yet\n");
+        case 2: {
+            printf("In Construction...\n");
             break;
+        }
+           
         case 0:
             printf("Goodbye\n");
             break;
