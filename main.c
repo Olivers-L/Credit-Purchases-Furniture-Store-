@@ -1,5 +1,14 @@
 #define _CRT_SECURE_NO_WARNINGS
 #include <stdio.h>
+/* Some values for testing: 
+Income	Price	Term	Rate	Expected installment
+2000	2000	6	    5%	    €350.00
+2000	3000	12	    7%	    €267.50
+1800	5000	24	    9%	    €227.08
+2500	8000	36	    11%	    €246.67
+
+Rejection: Income: 1000; Price: 5000; Term: 6 */
+
 
 int main(void)
 {
@@ -79,7 +88,71 @@ int main(void)
         break;
 
         case 2: {
-            printf("In Construction...\n");
+            double interestAmount;
+            double totalRepayment;
+            double regularInstallment;
+            double extraCreditCost;
+            double remainingBalance;
+
+            switch (approved) {
+            case 0:
+                printf("No approved credit exists.\n");
+                printf("Complete the credit application first. \n");
+                break;
+            case 1:
+                printf("Approved Credit found.\n");
+
+                switch (price > 0 && income > 0) {
+                case 0:
+                    printf("ERROR: invalid credit data.\n");
+                    break;
+                case 1:
+                    printf("Credit data is valid.\n");
+
+                    switch ((term == 6 || term == 12 || term == 24 || term == 36) && rate >= 0) {
+                    case 0: 
+                        printf("ERROR: Invalid repayment conditions.\n");
+                        break;
+                    case 1:
+                        printf("Repayment conditions are valid. \n");
+
+                        interestAmount = price * rate / 100.0;
+                        totalRepayment = price + interestAmount;
+                        regularInstallment = totalRepayment / term;
+                        extraCreditCost = totalRepayment - price;
+                        remainingBalance = totalRepayment;
+
+                        switch (totalRepayment >= price) {
+                        case 0:
+                            printf("ERROR: Calculation error.");
+                            break;
+                        case 1:
+                            regularInstallment = totalRepayment / term;
+                            printf("Operation is successful, repayment information ready; directing to Repayment Menu.");
+                            
+                            /*
+                            REPAYMENT CONTROL MENU
+                            WILL START HERE
+                            */
+
+                            break;
+                        }
+
+
+                        break;
+                    }
+                }
+            }
+            // -------------------------------------------
+            printf("\n\n--- DEBUG REPAYMENT VALUES ---\n");
+            printf("Rate: %.2f%%\n", rate);
+            printf("Interest amount: %.2f EUR\n", interestAmount);
+            printf("Total repayment: %.2f EUR\n", totalRepayment);
+            printf("Regular installment: %.2f EUR\n", regularInstallment);
+            printf("Extra credit cost: %.2f EUR\n", extraCreditCost);
+            printf("Remaining balance: %.2f EUR\n", remainingBalance);
+            printf("---------------------------------\n\n");
+
             break;
         }
            
