@@ -109,9 +109,9 @@ int main(void)
                 case 1:
                     printf("Credit data is valid.\n");
 
-                    switch ((term == 6 || term == 12 || term == 24 || term == 36) && rate >= 0) {
+                    switch ((term == 6 || term == 12 || term == 24 || term == 36) && rate > 0) {
                     case 0: 
-                        printf("ERROR: Invalid repayment conditions.\n");
+                        printf("ERROR: Invalid repayment conditions; choose a term from credit application.\n");
                         break;
                     case 1:
                         printf("Repayment conditions are valid. \n");
@@ -128,6 +128,7 @@ int main(void)
                             break;
                         case 1:
                             printf("Operation is successful, repayment information ready; directing to Repayment Menu.\n");
+                           
                             int repaymentChoice;
                             
                                 printf("\n\n");
@@ -152,7 +153,17 @@ int main(void)
                                 printf("  [7] Re-display credit conditions\n");
                                 printf("  [0] Return to main menu\n\n");
                                 printf("*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*=*\n");
-                             do {
+                                // option 2 & 3 variables:
+                                int startMonth;
+                                int startYear;
+                                int paymentNo;
+                                int paymentMonth;
+                                int paymentYear;
+                                double remaining;
+                                double currentPayment;
+                                int dateSet = 0;
+                                
+                                do {
                                  printf("Select an option: ");
 
                                 if (scanf("%d", &repaymentChoice) != 1){
@@ -162,44 +173,326 @@ int main(void)
                                     repaymentChoice = -1;
                                     continue;
                                 }
-
                                 switch (repaymentChoice) {
                                 case 1:
-                                    printf("Repayment summary.\n\n");
-                                    break;
+                                    printf("\nRepayment summary.\n\n");
+                                    printf("Here is your furniture price: %.2lf EUR\n", price);
+                                    printf("Here is your income: %.2lf EUR\n", income);
+                                    printf("Here is your repayment term amount: %d\n", term);
+                                    printf("Here is your interest rate: %.2lf%%\n", rate);
+                                    printf("Here is your total repayment amount: %.2lf\n", totalRepayment);
+                                    printf("Here is your :extra credit cost: %.2lf EUR\n", extraCreditCost);
+                                    printf("Here is your regular installment: %.2lf EUR\n", regularInstallment);
+                                    printf("Returning to Repayment menu...\n\n");
+                                 break;
                                 case 2:
-                                    printf("Generate full repayment schedule\n\n");
+                                    printf("\nRepayment Schedule:\n\n");
+
+                                    int extra;
+
+                                    while (1) {
+                                        printf("Enter first payment month (1-12): ");
+
+                                        if (scanf("%d", &startMonth) != 1) {
+                                            printf("Invalid input, enter a number.\n");
+
+                                            while (getchar() != '\n');
+                                            continue;
+                                        }
+
+                                        extra = getchar();
+
+                                        if (extra != '\n') {
+                                            printf("Invalid input, enter only a number.\n");
+
+                                            while (getchar() != '\n');
+                                            continue;
+                                        }
+
+                                        if (startMonth < 1 || startMonth > 12) {
+                                            printf("Invalid month, enter a month from 1 to 12.\n");
+                                            continue;
+                                        }
+                                        break;
+                                    }
+
+                                    int extra2;
+
+                                    while (1) {
+                                        printf("Enter first payment year: ");
+                                    
+                                        if (scanf("%d", &startYear) != 1) {
+                                            printf("Invalid Input, enter a number.");
+                                            while (getchar() != '\n');
+                                            continue;
+                                        }
+
+                                        extra2 = getchar();
+
+                                        if (extra2 != '\n') {
+                                            printf("Invalid input, enter only a number.\n");
+                                            while (getchar() != '\n');
+                                            continue;
+                                        }
+
+                                        if (startYear < 2000 || startYear > 2100) {
+                                            printf("Invalid year, enter a valid year. \n");
+                                            continue;
+                                        }
+                                        break;
+                                    }
+                                    paymentNo = 1;
+                                    paymentMonth = startMonth;
+                                    paymentYear = startYear;
+                                    remaining = totalRepayment;
+                                    dateSet = 1;
+
+                                    printf("Schedule starting from %02d/%d\n\n", paymentMonth, paymentYear);
+                                break;
+
+                                case 3: {
+                                    int installmentNumber;
+                                    int targetMonth;
+                                    int targetYear;
+                                    int counter;
+                                    int validInstallment = 0;
+                                    int extra3;
+
+                                    if (dateSet == 0) {
+                                        printf("No repayment schedule exists yet.\n");
+                                        printf("Please generate the repayment schedule first using option 2.\n\n");
+                                        break;
+                                    }
+
+                                    printf("\nInspect Installment\n\n");
+
+                                    while (validInstallment == 0) {
+
+                                        printf("Enter installment number (1-%d): ", term);
+
+                                        if (scanf("%d", &installmentNumber) != 1) {
+                                            printf("Invalid input. Please enter a number.\n");
+
+                                            while (getchar() != '\n') {
+                                                // Clear invalid input
+                                            }
+
+                                            continue;
+                                        }
+
+                                        extra3 = getchar();
+
+                                        while (extra3 == ' ' || extra3 == '\t') {
+                                            extra3 = getchar();
+                                        }
+
+                                        if (extra3 != '\n') {
+                                            printf("Invalid input. Enter only a number.\n");
+
+                                            while (extra3 != '\n') {
+                                                extra3 = getchar();
+                                            }
+
+                                            continue;
+                                        }
+
+                                        /* Number is valid, now check its range */
+                                        if (installmentNumber < 1 || installmentNumber > term) {
+                                            printf("Invalid installment number. Choose from 1 to %d.\n", term);
+                                            continue;
+                                        }
+
+                                        validInstallment = 1;
+                                    }
+
+
+                                    targetMonth = startMonth;
+                                    targetYear = startYear;
+                                    counter = 1;
+
+                                    while (counter < installmentNumber) {
+
+                                        targetMonth++;
+
+                                        if (targetMonth > 12) {
+                                            targetMonth = 1;
+                                            targetYear++;
+                                        }
+
+                                        counter++;
+                                    }
+
+
+                                    remaining = totalRepayment;
+                                    counter = 1;
+
+                                    while (counter < installmentNumber) {
+                                        remaining = remaining - regularInstallment;
+                                        counter++;
+                                    }
+
+
+                                    if (installmentNumber == term) {
+                                        currentPayment = remaining;
+                                    }
+                                    else {
+                                        currentPayment = regularInstallment;
+                                    }
+
+
+                                    printf("\nInstallment #%d\n", installmentNumber);
+                                    printf("Payment date : %02d/%d\n", targetMonth, targetYear);
+                                    printf("Amount       : %.2f EUR\n\n", currentPayment);
+
                                     break;
-                                case 3:
-                                    printf("Inspect a specific installment\n\n");
+                                }
+
+                                case 4: {
+                                    double creditCostPercent;
+                                    double averageMonthlyCost;
+
+                                    creditCostPercent = (extraCreditCost / price) * 100.0;
+                                    averageMonthlyCost = totalRepayment / term;
+
+                                    printf("\n\n");
+                                    printf("=============================================\n");
+                                    printf("              CREDIT COST ANALYSIS           \n");
+                                    printf("=============================================\n");
+                                    printf("Furniture price        : %.2f EUR\n", price);
+                                    printf("Interest rate          : %.2f%%\n", rate);
+                                    printf("Interest amount        : %.2f EUR\n", interestAmount);
+                                    printf("Extra credit cost      : %.2f EUR\n", extraCreditCost);
+                                    printf("Credit cost percentage : %.2f%%\n", creditCostPercent);
+                                    printf("Total repayment        : %.2f EUR\n", totalRepayment);
+                                    printf("Average monthly cost   : %.2f EUR\n", averageMonthlyCost);
+                                    printf("=============================================\n\n");
+
                                     break;
-                                case 4:
-                                    printf("View credit cost analysis\n\n");
+                                }
+                                case 5: {
+                                    int finalMonth;
+                                    int finalYear;
+                                    int counter;
+
+                                    if (dateSet == 0) {
+                                        printf("No repayment schedule exists yet.\n");
+                                        printf("Please generate the repayment schedule first using option 2.\n\n");
+                                        break;
+                                    }
+
+                                    finalMonth = startMonth;
+                                    finalYear = startYear;
+                                    counter = 1;
+
+                                    while (counter < term) {
+
+                                        finalMonth++;
+
+                                        if (finalMonth > 12) {
+                                            finalMonth = 1;
+                                            finalYear++;
+                                        }
+
+                                        counter++;
+                                    }
+
+                                    printf("\n");
+                                    printf("=============================================\n");
+                                    printf("              FINAL PAYMENT DATE             \n");
+                                    printf("=============================================\n");
+                                    printf("First payment date : %02d/%d\n", startMonth, startYear);
+                                    printf("Repayment term     : %d months\n", term);
+                                    printf("Final payment date : %02d/%d\n", finalMonth, finalYear);
+                                    printf("=============================================\n\n");
+
                                     break;
-                                case 5:
-                                    printf("Find final payment date\n\n");
+                                }
+                                case 6: {
+                                    int paidCount;
+                                    int remainingInstallments;
+                                    double amountPaid;
+                                    double simulatedRemaining;
+
+                                    printf("\Repayment Progress Simulation\n\n");
+
+                                    while (1) {
+                                        printf("Enter number of installments already paid (0-%d): ", term);
+
+                                        if (scanf("%d", &paidCount) != 1) {
+                                            printf("Invalid input. Please enter a number.\n");
+
+                                            while (getchar() != '\n') {
+                                                // clear invalid input
+                                            }
+
+                                            continue;
+                                        }
+
+                                        if (paidCount < 0 || paidCount > term) {
+                                            printf("Invalid number. Enter a value from 0 to %d.\n\n", term);
+                                            continue;
+                                        }
+
+                                        break;
+                                    }
+
+                                    amountPaid = regularInstallment * paidCount;
+                                    remainingInstallments = term - paidCount;
+
+                                    if (paidCount == term) {
+                                        amountPaid = totalRepayment;
+                                        simulatedRemaining = 0;
+                                    }
+                                    else {
+                                        simulatedRemaining = totalRepayment - amountPaid;
+                                    }
+
+                                    printf("\n");
+                                    printf("=============================================\n");
+                                    printf("           REPAYMENT PROGRESS                \n");
+                                    printf("=============================================\n");
+                                    printf("Installments paid      : %d / %d\n", paidCount, term);
+                                    printf("Amount paid            : %.2f EUR\n", amountPaid);
+                                    printf("Remaining balance      : %.2f EUR\n", simulatedRemaining);
+                                    printf("Installments remaining : %d\n", remainingInstallments);
+
+                                    if (simulatedRemaining == 0) {
+                                        printf("Credit status          : FULLY REPAID\n");
+                                    }
+                                    else {
+                                        printf("Credit status          : ACTIVE\n");
+                                    }
+
+                                    printf("=============================================\n\n");
+
                                     break;
-                                case 6:
-                                    printf("Simulate repayment progress\n\n");
-                                    break;
+                                }
                                 case 7:
-                                    printf("Re-display credit conditions\n\n");
+
+                                    printf("\n");
+                                    printf("=============================================\n");
+                                    printf("            CREDIT CONDITIONS                \n");
+                                    printf("=============================================\n");
+                                    printf("Furniture price      : %.2f EUR\n", price);
+                                    printf("Monthly income       : %.2f EUR\n", income);
+                                    printf("Repayment term       : %d months\n", term);
+                                    printf("Interest rate        : %.2f%%\n", rate);
+                                    printf("Monthly installment  : %.2f EUR\n", regularInstallment);
+                                    printf("=============================================\n\n");
+                                    
                                     break;
 
                                 case 0:
-                                    printf("Returning to main menu...\n\n");
+                                    printf("Returning to the main menu...\n\n\n");
                                     break;
 
                                 default:
                                     printf("Invalid option. Please choose a number from the menu.\n\n");
                                     break;
-                                    
                                 }
-                            
-                              } while (repaymentChoice != 0);
-
-
-
+                               
+                                } while (repaymentChoice != 0);
+                               
                             break;
                         }
 
